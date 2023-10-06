@@ -4,17 +4,29 @@ import urllib3, shutil
 
 c = urllib3.PoolManager()
 
-with c.request("GET", "http://piston-meta.mojang.com/mc/game/version_manifest_v2.json", preload_content=False) as res, open("manifest-v2.json", "wb") as out_file:
-    print("downloading manifest-v2.json")
+version_manifest_v2_url = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
+experimental_versions_url = "https://maven.fabricmc.net/net/minecraft/experimental_versions.json"
+
+with c.request("GET", version_manifest_v2_url, preload_content=False) as res, open("version_manifest_v2.json", "wb") as out_file:
+    print("downloading version_manifest_v2.json from mojang")
     shutil.copyfileobj(res, out_file)
 
-with open("manifest-v2.json", "rt") as file:
+with c.request("GET", experimental_versions_url, preload_content=False) as res, open("experimental_versions.json", "wb") as out_file:
+    print("downloading experimental_versions.json from fabric")
+    shutil.copyfileobj(res, out_file)
+
+with open("version_manifest_v2.json", "rt") as file:
     manifest_v2 = json.load(file)
+
+with open("experimental_versions.json", "rt") as file:
+    experimental_versions = json.load(file)
 
 if not os.path.exists("./versions/"):
     os.makedirs("./versions")
 
-for version in manifest_v2["versions"]:
+all_versions = manifest_v2["versions"] + experimental_versions["versions"]
+
+for version in all_versions:
     id = version["id"]
     directory = "./versions/" + id
     filepath = directory + "/" + id + ".json"
