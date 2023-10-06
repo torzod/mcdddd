@@ -4,6 +4,7 @@ import urllib3, shutil
 
 c = urllib3.PoolManager()
 
+#https://maven.fabricmc.net/net/minecraft/experimental_versions.json
 with c.request("GET", "http://piston-meta.mojang.com/mc/game/version_manifest_v2.json", preload_content=False) as res, open("manifest-v2.json", "wb") as out_file:
     print("downloading manifest-v2.json")
     shutil.copyfileobj(res, out_file)
