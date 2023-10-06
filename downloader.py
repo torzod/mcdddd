@@ -15,9 +15,9 @@ if not os.path.exists("./versions/"):
     os.makedirs("./versions")
 
 for version in manifest_v2["versions"]:
-    id = version["id"]
-    directory = "./versions/" + id
-    filepath = directory + "/" + id + ".json"
+    version_id = version["id"]
+    directory = f"./versions/{version_id}"
+    filepath = f"{directory}/{version_id}.json"
     url = version["url"]
 
     if not os.path.exists(directory):
@@ -25,7 +25,7 @@ for version in manifest_v2["versions"]:
 
     if not os.path.isfile(filepath):
         with c.request("GET", url, preload_content=False) as res, open(filepath, "wb") as out_file:
-            print("downloading " + id + ".json")
+            print(f"downloading {version_id}.json")
             shutil.copyfileobj(res, out_file)
 
     with open(filepath, "rt") as file:
@@ -34,14 +34,14 @@ for version in manifest_v2["versions"]:
         if "client_mappings" in version_meta["downloads"]:
             client = version_meta["downloads"]["client"]
             client_mappings = version_meta["downloads"]["client_mappings"]
-            client_filename = directory + "/" + id + "-client"
+            client_filename = f"{directory}/{version_id}-client"
 
             if not os.path.isfile(client_filename + ".jar"):
                 with c.request("GET", client["url"], preload_content=False) as res, open(client_filename + ".jar", "wb") as out_file:
-                    print("downloading " + id + "-client.jar")
+                    print(f"downloading {version_id}-client.jar")
                     shutil.copyfileobj(res, out_file)
 
             if not os.path.isfile(client_filename + ".txt"):
                 with c.request("GET", client_mappings["url"], preload_content=False) as res, open(client_filename + ".txt", "wb") as out_file:
-                    print("downloading " + id + "-client.txt")
+                    print(f"downloading {version_id}-client.txt")
                     shutil.copyfileobj(res, out_file)
