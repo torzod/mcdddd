@@ -4,3 +4,6 @@ experimental_versions.json
 
 # intellij
 .idea/
+
+# yarn repo
+yarn/
