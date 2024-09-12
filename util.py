@@ -12,4 +12,4 @@ def download_file(url, output_path):
 
 def error(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
-    exit(0)
+    exit(1)
