@@ -1,16 +1,7 @@
 import argparse
 from os import path, makedirs
 from json import load
-from shutil import copyfileobj
-from urllib3 import PoolManager
-
-c = PoolManager()
-
-
-def download_file(url, output_path):
-    with c.request("GET", url, preload_content=False) as res, open(output_path, "wb") as out_file:
-        copyfileobj(res, out_file)
-
+from util import download_file
 
 parser = argparse.ArgumentParser(description="Downloads Minecraft versions and their mappings, if applicable.")
 parser.add_argument("--server", action="store_true", default=False, help="Downloads server versions")
@@ -21,13 +12,11 @@ args = parser.parse_args()
 version_manifest_v2_url = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
 experimental_versions_url = "https://maven.fabricmc.net/net/minecraft/experimental_versions.json"
 
-with c.request("GET", version_manifest_v2_url, preload_content=False) as res, open("version_manifest_v2.json", "wb") as out_file:
-    print("downloading version_manifest_v2.json from mojang")
-    copyfileobj(res, out_file)
+print("downloading version_manifest_v2.json from mojang")
+download_file(version_manifest_v2_url, "version_manifest_v2.json")
 
-with c.request("GET", experimental_versions_url, preload_content=False) as res, open("experimental_versions.json", "wb") as out_file:
-    print("downloading experimental_versions.json from fabric")
-    copyfileobj(res, out_file)
+print("downloading experimental_versions.json from fabric")
+download_file(experimental_versions_url, "experimental_versions.json")
 
 with open("version_manifest_v2.json", "rt") as file:
     manifest_v2 = load(file)
@@ -51,9 +40,8 @@ for version in all_versions:
         makedirs(directory)
 
     if not path.isfile(filepath):
-        with c.request("GET", url, preload_content=False) as res, open(filepath, "wb") as out_file:
-            print(f"downloading {version_id}.json")
-            copyfileobj(res, out_file)
+        print(f"downloading {version_id}.json")
+        download_file(url, filepath)
 
     with open(filepath, "rt") as file:
         version_meta = load(file)
