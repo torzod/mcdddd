@@ -34,7 +34,7 @@ def main():
     for version in args.versions:
         directory = os.path.join("versions", version)
         if not os.path.exists(directory):
-            error("folder {} doesn't exist, have you ran the downloader?".format(directory))
+            error("folder {} doesn't exist, have you run the downloader?".format(directory))
 
         mappings_dir = os.path.join(directory, "yarn_mappings")
         if os.path.exists(mappings_dir):

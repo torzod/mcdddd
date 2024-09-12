@@ -17,12 +17,12 @@ if not os.path.exists(stitch_path):
 version = sys.argv[1]
 version_dir = os.path.join("versions", version)
 if not os.path.exists(version_dir):
-    error("folder {} doesn't exist, have you ran the downloader?".format(version_dir))
+    error("folder {} doesn't exist, have you run the downloader?".format(version_dir))
 
 client_path = os.path.join(version_dir, f"{version}-client.jar")
 server_path = os.path.join(version_dir, f"{version}-server.jar")
 if not os.path.exists(client_path) or not os.path.exists(server_path):
-    error("missing client or server jar, have you ran the downloader?")
+    error("missing client or server jar, have you run the downloader?")
 
 merged_path = os.path.join(version_dir, f"{version}-merged.jar")
 if os.path.exists(merged_path):
