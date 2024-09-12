@@ -1,18 +1,12 @@
 import argparse
-import distutils.dir_util
 import os.path
 import shutil
-import sys
 from distutils import dir_util
+from util import error
 
 import pygit2
 
 repo_path = os.path.join(os.path.dirname(__file__), "yarn")
-
-
-def error(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
-    exit(0)
 
 
 def setup_mappings_repo(version_tag):
@@ -53,6 +47,7 @@ def main():
         os.mkdir(mappings_dir)
         setup_mappings_repo(version)
         dir_util.copy_tree(os.path.join(repo_path, "mappings"), mappings_dir)
+        print("mappings saved to {}".format(mappings_dir))
 
 
 main()
