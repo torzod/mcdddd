@@ -1,6 +1,7 @@
 import os
 import sys
 from shutil import copyfileobj
+
 from urllib3 import PoolManager
 
 c = PoolManager()
@@ -8,12 +9,15 @@ c = PoolManager()
 
 def extract_library_info(directory, library):
     name_parts = library["name"].split(":")
-    if len(name_parts) != 3:
+    has_extra = len(name_parts) == 4
+    if len(name_parts) != 3 and not has_extra:
         error("unable to parse library {}".format(library["name"]))
 
     package = name_parts[0]
     name = name_parts[1]
     version = name_parts[2]
+    if has_extra:
+        version += f"-{name_parts[3]}"
 
     library_dir = os.path.join(directory, os.sep.join(package.split(".")), name, version)
     return package, name, version, library_dir
