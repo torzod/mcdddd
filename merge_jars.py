@@ -1,7 +1,8 @@
 import os
 import subprocess
 import sys
-from util import download_file, error
+
+from util import error
 
 if len(sys.argv) != 2:
     error("Usage: {} <version>".format(sys.argv[0]))
@@ -9,10 +10,9 @@ if len(sys.argv) != 2:
 tool_dir = os.path.join(os.path.dirname(__file__), "tools")
 os.makedirs(tool_dir, exist_ok=True)
 
-stitch_path = os.path.join(tool_dir, "stitch-0.6.2-all.jar")
+stitch_path = os.path.join(tool_dir, "stitch-0.17.0+local-all.jar")
 if not os.path.exists(stitch_path):
-    print("downloading stitch-0.6.2-all.jar")
-    download_file("https://maven.fabricmc.net/net/fabricmc/stitch/0.6.2/stitch-0.6.2-all.jar", stitch_path)
+    error("stitch not found: get from https://github.com/claiwe/stitch")
 
 version = sys.argv[1]
 version_dir = os.path.join("versions", version)
