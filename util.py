@@ -1,8 +1,22 @@
+import os
 import sys
 from shutil import copyfileobj
 from urllib3 import PoolManager
 
 c = PoolManager()
+
+
+def extract_library_info(directory, library):
+    name_parts = library["name"].split(":")
+    if len(name_parts) != 3:
+        error("unable to parse library {}".format(library["name"]))
+
+    package = name_parts[0]
+    name = name_parts[1]
+    version = name_parts[2]
+
+    library_dir = os.path.join(directory, os.sep.join(package.split(".")), name, version)
+    return package, name, version, library_dir
 
 
 def download_file(url, output_path):

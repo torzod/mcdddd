@@ -1,22 +1,13 @@
 import argparse
-import os
-from os import path, makedirs, sep
 from json import load
-from util import download_file
+from os import path, makedirs
+
+from util import download_file, extract_library_info
 
 
 def download_libraries(directory, version_meta):
     for library in version_meta["libraries"]:
-        name_parts = library["name"].split(":")
-        if len(name_parts) != 3:
-            print("unable to parse library {}".format(library["name"]))
-            continue
-
-        package = name_parts[0]
-        name = name_parts[1]
-        version = name_parts[2]
-
-        library_dir = path.join(directory, sep.join(package.split(".")), name, version)
+        package, name, version, library_dir = extract_library_info(directory, library)
         if not path.exists(library_dir):
             makedirs(library_dir)
 
