@@ -1,9 +1,8 @@
-import json
 import os
 import subprocess
 import sys
 
-from util import error, extract_library_info
+from util import error, get_classpath
 
 if len(sys.argv) != 2:
     error("Usage: {} <version>".format(sys.argv[0]))
@@ -24,13 +23,6 @@ version_dir = os.path.join("versions", version)
 if not os.path.exists(version_dir):
     error("folder {} doesn't exist, have you run the downloader?".format(version_dir))
 
-version_meta_path = os.path.join(version_dir, f"{version}.json")
-if not os.path.exists(version_meta_path):
-    error("missing version meta")
-
-with open(version_meta_path, "rt") as file:
-    version_meta = json.load(file)
-
 merged_path = os.path.join(version_dir, f"{version}-merged.jar")
 if not os.path.exists(merged_path):
     error("missing merged jar")
@@ -43,20 +35,7 @@ output_path = os.path.join(version_dir, f"{version}-intermediates.jar")
 if os.path.exists(output_path):
     error("{} already exists, quitting".format(output_path))
 
-libraries_path = os.path.join(version_dir, "libraries")
-if not os.path.exists(libraries_path):
-    error("missing libraries")
-
-classpath = []
-for library in version_meta["libraries"]:
-    package, name, version, library_dir = extract_library_info(libraries_path, library)
-    file_name = f"{name}-{version}.jar"
-    library_path = os.path.join(library_dir, file_name)
-    if not os.path.exists(library_dir) or not os.path.exists(library_path):
-        error("failed to load library {} version {}".format(name, version))
-        continue
-
-    classpath.append(os.path.abspath(library_path))
+classpath = get_classpath(version, version_dir)
 
 process_args = [
     "java", "-Xmx2G", "-jar",
