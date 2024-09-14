@@ -1,11 +1,13 @@
 import os
 import subprocess
 import sys
+
 from util import download_file, error
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 2 and len(sys.argv) != 3:
     error("Usage: {} <version>".format(sys.argv[0]))
 
+use_intermediary = True if len(sys.argv) == 3 and sys.argv[2] == "--intermediary" else False
 tool_dir = os.path.join(os.path.dirname(__file__), "tools")
 os.makedirs(tool_dir, exist_ok=True)
 
@@ -23,7 +25,7 @@ mappings_path = os.path.join(version_dir, "yarn_mappings")
 if not os.path.exists(mappings_path):
     error("missing mappings")
 
-merged_path = os.path.join(version_dir, f"{version}-merged.jar")
+merged_path = os.path.join(version_dir, f"{version}-intermediates.jar" if use_intermediary else f"{version}-merged.jar")
 if not os.path.exists(merged_path):
     error("missing merged jar".format(merged_path))
 
