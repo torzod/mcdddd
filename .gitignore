@@ -1,7 +1,9 @@
-tools/
 versions/
 version_manifest_v2.json
 experimental_versions.json
+version_list.txt
+special_versions.txt
+normal_versions.txt
 
 # intellij
 .idea/
