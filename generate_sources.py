@@ -38,7 +38,7 @@ if os.path.exists(sources_path):
 classpath = get_classpath(version, version_dir)
 
 args = [
-    "java", "-Xmx2G", "-jar",
+    "java", "-Xmx4G", "-jar",
     os.path.abspath(vineflower_path)
 ]
 for library in classpath:
