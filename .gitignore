@@ -1,3 +1,4 @@
+tools/
 versions/
 version_manifest_v2.json
 experimental_versions.json
@@ -10,3 +11,6 @@ normal_versions.txt
 
 # yarn repo
 yarn/
+
+# python cache
+__pycache__/
