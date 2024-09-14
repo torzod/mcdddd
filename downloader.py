@@ -2,7 +2,7 @@ import argparse
 from json import load
 from os import path, makedirs
 
-from util import download_file, extract_library_info
+from util import download_file, extract_library_info, process_server_jar
 
 
 def download_libraries(directory, version_meta):
@@ -81,7 +81,8 @@ def main():
                     server_filename = f"{directory}/{version_id}-server"
                     if not path.isfile(server_filename + ".jar"):
                         print(f"downloading {version_id}-server.jar")
-                        download_file(server["url"], server_filename + ".jar")
+                        download_file(server["url"], f"{server_filename}-intermediate.jar")
+                    process_server_jar(directory, server_filename)
 
                 if args.libraries:
                     libraries_path = path.join(directory, "libraries")

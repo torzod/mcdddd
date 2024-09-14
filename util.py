@@ -1,11 +1,40 @@
 import json
 import os
+import shutil
 import sys
+import zipfile
 from shutil import copyfileobj
 
 from urllib3 import PoolManager
 
 c = PoolManager()
+
+
+def process_server_jar(directory, server_filename):
+    with zipfile.ZipFile(f"{server_filename}-intermediate.jar", "r") as zip:
+        versions_path = zipfile.Path(zip, "META-INF/versions.list")
+        if not versions_path.exists():
+            shutil.move(f"{server_filename}-intermediate.jar", f"{server_filename}.jar")
+            return
+
+        versions_content = versions_path.read_text()
+        versions = versions_content.split("\n")
+        if len(versions) != 1:
+            error("more than one version in {}".format(zip.filename))
+
+        entry = versions[0].split("\t")
+        if len(entry) != 3:
+            error("invalid version entry")
+
+        # there has to be a better name for this
+        server_zip_filename = f"META-INF/versions/{entry[2]}"
+        server_path = zipfile.Path(zip, server_zip_filename)
+        if not server_path.exists():
+            error("path {} doesn't exist in server jar".format(server_zip_filename))
+
+        with server_path.open("rb") as server_jar, open(f"{server_filename}.jar", "wb") as output_file:
+            shutil.copyfileobj(server_jar, output_file)
+    os.remove(f"{server_filename}-intermediate.jar")
 
 
 def extract_library_info(directory, library):
