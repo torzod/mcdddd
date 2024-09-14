@@ -2,9 +2,10 @@ import argparse
 import os.path
 import shutil
 from distutils import dir_util
-from util import download_file, error
 
 import pygit2
+
+from util import download_file, error
 
 repo_path = os.path.join(os.path.dirname(__file__), "yarn")
 
@@ -26,9 +27,13 @@ def setup_mappings_repo(version_tag):
     if branch is None:
         error("yarn repository has no remote {}".format(branch_name))
 
+    repo.remotes[0].fetch()
+
     print("checking out {}".format(branch_name))
     ref = repo.lookup_reference(branch.name)
+    commit = repo.get(branch.target)
     repo.checkout(ref)
+    repo.reset(commit.id, pygit2.GIT_RESET_HARD)
 
 
 def get_yarn_mappings(version, directory):
