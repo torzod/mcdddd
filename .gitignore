@@ -1,3 +1,10 @@
+tools/
 versions/
 version_manifest_v2.json
 experimental_versions.json
+
+# intellij
+.idea/
+
+# yarn repo
+yarn/
