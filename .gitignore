@@ -5,6 +5,7 @@ experimental_versions.json
 version_list.txt
 special_versions.txt
 normal_versions.txt
+old_versions.txt
 
 # intellij
 .idea/
@@ -14,3 +15,6 @@ yarn/
 
 # python cache
 __pycache__/
+
+# ds store
+.DS_Store
