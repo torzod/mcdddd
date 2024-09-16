@@ -1,11 +1,17 @@
+import argparse
 import os
 import subprocess
-import sys
 
 from util import error, get_classpath
 
-if len(sys.argv) != 2:
-    error("Usage: {} <version>".format(sys.argv[0]))
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument("--from-ns",  default="official", help="Namespace to remap from")
+parser.add_argument("--to-ns", default="intermediary", help="Namespace to remap to")
+parser.add_argument("--input", default="{}-merged.jar", help="Input jar path")
+parser.add_argument("--tiny", default="{}.tiny", help="Input tiny mappings file")
+parser.add_argument("--output", default="{}-intermediates.jar", help="Output jar path")
+parser.add_argument("version", help="Which version to remap")
+args = parser.parse_args()
 
 tool_dir = os.path.join(os.path.dirname(__file__), "tools")
 os.makedirs(tool_dir, exist_ok=True)
@@ -18,20 +24,20 @@ if not os.path.exists(remapper_path):
     #               remapper_path)
     error("tiny remapper not found: get from https://github.com/claiwe/tiny-remapper")
 
-version = sys.argv[1]
+version = args.version
 version_dir = os.path.join("versions", version)
 if not os.path.exists(version_dir):
     error("folder {} doesn't exist, have you run the downloader?".format(version_dir))
 
-merged_path = os.path.join(version_dir, f"{version}-merged.jar")
-if not os.path.exists(merged_path):
-    error("missing merged jar")
+input_path = os.path.join(version_dir, args.input.format(version))
+if not os.path.exists(input_path):
+    error("missing input file")
 
-tiny_path = os.path.join(version_dir, f"{version}.tiny")
+tiny_path = os.path.join(version_dir, args.tiny.format(version))
 if not os.path.exists(tiny_path):
-    error("missing intermediates")
+    error("missing tiny file")
 
-output_path = os.path.join(version_dir, f"{version}-intermediates.jar")
+output_path = os.path.join(version_dir, args.output.format(version))
 if os.path.exists(output_path):
     error("{} already exists, quitting".format(output_path))
 
@@ -40,10 +46,10 @@ classpath = get_classpath(version, version_dir)
 process_args = [
     "java", "-Xmx2G", "-jar",
     os.path.abspath(remapper_path),
-    os.path.abspath(merged_path),
+    os.path.abspath(input_path),
     os.path.abspath(output_path),
     os.path.abspath(tiny_path),
-    "official", "intermediary"
+    args.from_ns, args.to_ns
 ]
 process_args.extend(classpath)
 process_args.extend([
