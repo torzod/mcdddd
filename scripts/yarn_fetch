@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Downloads, deobfuscates, and decompiles newer versions after
+# Yarn started using intermediate names in their mappings
+# (anything after 1.14.3)
+
+PYTHON=/usr/bin/python3
+SCRIPT_PATH=$(dirname -- "$(readlink -f -- "$0")")
+
+if [[ $# -eq 0 ]] ; then
+  echo "No version specified"
+  exit 1
+fi
+
+pushd $SCRIPT_PATH/..
+$PYTHON downloader.py --libraries --server --force-version "$1" &&
+$PYTHON download_fabric_mappings.py --intermediary "$1" &&
+$PYTHON merge_jars.py "$1" &&
+$PYTHON remap.py "$1" &&
+$PYTHON deobfuscate_yarn.py "$1" --intermediary &&
+$PYTHON generate_sources.py "$1"
+popd
+
