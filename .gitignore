@@ -1,12 +1,12 @@
 tools/
 versions/
 
-#manifests
+# manifests
 version_manifest.json
 version_manifest_v2.json
 experimental_versions.json
 
-#separated version lists
+# separated version lists
 version_list.txt
 special_versions.txt
 normal_versions.txt
