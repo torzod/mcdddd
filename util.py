@@ -71,7 +71,7 @@ def get_classpath(version, version_dir):
         file_name = f"{name}-{version}.jar"
         library_path = os.path.join(library_dir, file_name)
         if not os.path.exists(library_dir) or not os.path.exists(library_path):
-            error("failed to load library {} version {}".format(name, version))
+            print("failed to load library {} version {}".format(name, version))
             continue
 
         classpath.append(os.path.abspath(library_path))
