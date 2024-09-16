@@ -5,11 +5,29 @@ from os import path, makedirs
 from util import download_file, extract_library_info, process_server_jar
 
 
+def handle_old_library(name, version, library, library_dir):
+    for classifier in library["downloads"]["classifiers"]:
+        classifier_object = library["downloads"]["classifiers"][classifier]
+
+        file_name = f"{name}-{version}-{classifier}.jar"
+        library_path = path.join(library_dir, file_name)
+        if path.exists(library_path):
+            print("library {} version {}-{} already downloaded, skipping".format(name, version, classifier))
+            continue
+
+        print("downloading library {}".format(file_name))
+        download_file(classifier_object["url"], library_path)
+
+
 def download_libraries(directory, version_meta):
     for library in version_meta["libraries"]:
         package, name, version, library_dir = extract_library_info(directory, library)
         if not path.exists(library_dir):
             makedirs(library_dir)
+
+        if "classifiers" in library["downloads"]:
+            handle_old_library(name, version, library, library_dir)
+            continue
 
         file_name = f"{name}-{version}.jar"
         library_path = path.join(library_dir, file_name)
