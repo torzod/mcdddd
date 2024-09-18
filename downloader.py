@@ -100,7 +100,7 @@ def main():
                     if not path.isfile(server_filename + ".jar"):
                         print(f"downloading {version_id}-server.jar")
                         download_file(server["url"], f"{server_filename}-intermediate.jar")
-                    process_server_jar(directory, server_filename)
+                        process_server_jar(directory, server_filename)
 
                 if args.libraries:
                     libraries_path = path.join(directory, "libraries")
