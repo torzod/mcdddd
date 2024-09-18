@@ -1,0 +1,15 @@
+#!/bin/bash
+ROOT_PATH=$(dirname -- "$(readlink -f -- "$0")")
+
+if ! [[ $# -eq 2 ]] ; then
+  echo "No versions specified"
+  exit 1
+fi
+
+bash $ROOT_PATH/clean_version $1
+bash $ROOT_PATH/clean_version $2
+difft $ROOT_PATH/../versions/$1/sources/ $ROOT_PATH/../versions/$2/sources/ \
+    --display side-by-side-show-both   \
+    --skip-unchanged \
+    --color always \
+    | ansi2html > $ROOT_PATH/../$1_to_$2.html

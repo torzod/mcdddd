@@ -1,0 +1,12 @@
+#!/bin/bash
+
+VERSIONS_PATH=$(dirname -- "$(readlink -f -- "$0")")/../versions
+
+if [[ $# -eq 0 ]] ; then
+  echo "No version specified"
+  exit 1
+fi
+
+find $VERSIONS_PATH/$1/sources -maxdepth 1 -type d -a ! -name "com" -a ! -name "net" -a ! -name "sources" -print0 \
+    | xargs -0 rm -r
+find $VERSIONS_PATH/$1/sources -maxdepth 1 -type f -delete
