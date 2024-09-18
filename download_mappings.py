@@ -30,12 +30,12 @@ def setup_mappings_repo(version_tag):
         pygit2.clone_repository("https://github.com/FabricMC/yarn.git", repo_path)
 
     repo = pygit2.Repository(repo_path)
+    repo.remotes[0].fetch()
+
     branch_name = f"origin/{version_tag}".replace(" ", "_")
     branch = repo.branches.get(branch_name)
     if branch is None:
         error("yarn repository has no remote {}".format(branch_name))
-
-    repo.remotes[0].fetch()
 
     print("checking out {}".format(branch_name))
     ref = repo.lookup_reference(branch.name)
