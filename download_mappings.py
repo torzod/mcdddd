@@ -4,7 +4,7 @@ import os.path
 import shutil
 import tempfile
 import zipfile
-from distutils import dir_util
+from shutil import copytree
 
 import pygit2
 
@@ -55,7 +55,7 @@ def get_yarn_mappings(version, directory):
 
     os.mkdir(mappings_dir)
     setup_mappings_repo(version)
-    dir_util.copy_tree(os.path.join(repo_path, "mappings"), mappings_dir)
+    copytree(os.path.join(repo_path, "mappings"), mappings_dir, dirs_exist_ok=True)
     print("mappings saved to {}".format(mappings_dir))
 
 
