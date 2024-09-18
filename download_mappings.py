@@ -12,7 +12,6 @@ import util
 from util import download_file, error
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--force", action="store_true", default=False, help="Delete mappings if they already exist")
 parser.add_argument("--intermediary", action="store_true", default=False, help="Downloads intermediary mappings")
 parser.add_argument("--ornithe", action="store_true", default=False, help="Downloads ornithe mappings")
 parser.add_argument("versions", metavar="version", nargs="+", help="Version to download mappings for")
