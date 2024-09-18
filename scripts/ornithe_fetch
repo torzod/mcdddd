@@ -11,11 +11,11 @@ if [[ $# -eq 0 ]] ; then
   exit 1
 fi
 
-pushd $SCRIPT_PATH/..
+pushd "$SCRIPT_PATH"/.. || exit
 $PYTHON downloader.py --libraries --server --force-version "$1" &&
-$PYTHON download_fabric_mappings.py --ornithe "$1" &&
+$PYTHON download_mappings.py --ornithe "$1" &&
 $PYTHON merge_jars.py "$1" &&
 $PYTHON remap.py --from-ns official --to-ns named --tiny feather-{}.tiny --output {}-deobf.jar "$1" &&
 $PYTHON generate_sources.py "$1"
-popd
+popd || exit
 
