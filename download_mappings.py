@@ -47,11 +47,8 @@ def setup_mappings_repo(version_tag):
 def get_yarn_mappings(version, directory):
     mappings_dir = os.path.join(directory, "yarn_mappings")
     if os.path.exists(mappings_dir):
-        if args.force:
-            print("removing {}".format(mappings_dir))
-            shutil.rmtree(mappings_dir)
-        else:
-            error("{} already exists and --force not specified, quitting".format(mappings_dir))
+        print("removing {}".format(mappings_dir))
+        shutil.rmtree(mappings_dir)
 
     os.mkdir(mappings_dir)
     setup_mappings_repo(version)
