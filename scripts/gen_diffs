@@ -12,4 +12,5 @@ difft $ROOT_PATH/../versions/$1/sources/ $ROOT_PATH/../versions/$2/sources/ \
     --display side-by-side-show-both   \
     --skip-unchanged \
     --color always \
+    --width 150 \
     | ansi2html > $ROOT_PATH/../$1_to_$2.html
