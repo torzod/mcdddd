@@ -44,7 +44,7 @@ java -jar tools/MinecraftDecompiler.jar \
 java -Xmx1G -jar tools/stitch-0.17.0+local-all.jar mergeJar \
     "versions/$version/$version-client-deobf.jar" \
     "versions/$version/$version-server-deobf.jar" \
-    "versions/$version/$version-merged.jar" \
+    "versions/$version/$version-deobf.jar" \
     || exit 1
 
 $PYTHON generate_sources.py "$version"
