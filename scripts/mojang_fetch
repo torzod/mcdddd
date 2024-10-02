@@ -1,9 +1,8 @@
 #!/bin/bash
 
 if [ ! -f tools/MinecraftDecompiler.jar ]; then
-    # TODO
-    echo "tools/MinecraftDecompiler.jar not found"
-    exit 1
+    curl "https://cdn.skye.lol/tools/MinecraftDecompiler.jar" \
+        -o tools/MinecraftDecompiler.jar
 fi
 
 PYTHON=/usr/bin/python3
