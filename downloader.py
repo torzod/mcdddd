@@ -90,13 +90,13 @@ def main():
             if (has_forced_version and version_id in args.force_version) or (not has_forced_version and has_mappings):
                 client = version_meta["downloads"]["client"]
                 client_filename = f"{directory}/{version_id}-client"
+                server_filename = f"{directory}/{version_id}-server"
                 if not path.isfile(client_filename + ".jar"):
                     print(f"downloading {version_id}-client.jar")
                     download_file(client["url"], client_filename + ".jar")
 
                 if args.server:
                     server = version_meta["downloads"]["server"]
-                    server_filename = f"{directory}/{version_id}-server"
                     if not path.isfile(server_filename + ".jar"):
                         print(f"downloading {version_id}-server.jar")
                         download_file(server["url"], f"{server_filename}-intermediate.jar")
@@ -109,9 +109,14 @@ def main():
                     download_libraries(libraries_path, version_meta)
 
                 if has_mappings and not path.isfile(client_filename + ".txt"):
-                    client_mappings = version_meta["downloads"]["client_mappings"]
                     print(f"downloading {version_id}-client.txt")
+                    client_mappings = version_meta["downloads"]["client_mappings"]
                     download_file(client_mappings["url"], client_filename + ".txt")
+
+                if has_mappings and not path.isfile(server_filename + ".txt"):
+                    print(f"downloading {version_id}-server.txt")
+                    server_mappings = version_meta["downloads"]["server_mappings"]
+                    download_file(server_mappings["url"], server_filename + ".txt")
 
 
 main()
