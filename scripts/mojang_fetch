@@ -1,29 +1,41 @@
 #!/bin/bash
+set -e
+
+PYTHON=/usr/bin/python3
+SCRIPT_PATH=$(dirname -- "$(readlink -f -- "$0")")
+pushd "$SCRIPT_PATH"/.. || exit
+
+if [ ! -d tools ]; then
+    mkdir tools
+fi
 
 if [ ! -f tools/MinecraftDecompiler.jar ]; then
+    # https://github.com/MaxPixelStudios/MinecraftDecompiler
     curl "https://cdn.skye.lol/tools/MinecraftDecompiler.jar" \
         -o tools/MinecraftDecompiler.jar
 fi
 
-PYTHON=/usr/bin/python3
-SCRIPT_PATH=$(dirname -- "$(readlink -f -- "$0")")
+if [ ! -f tools/stitch-0.17.0+local-all.jar ]; then
+    # https://github.com/claiwe/stitch
+    curl "https://cdn.skye.lol/tools/stitch-0.17.0+local-all.jar" \
+        -o tools/stitch-0.17.0+local-all.jar
+fi
 
-if [ $# -eq 0 ] ; then
+if [ $# -lt 0 ] ; then
     echo "No version specified"
     exit 1
 fi
 
-pushd "$SCRIPT_PATH"/.. || exit
+version="$1"
+$PYTHON downloader.py --server --force-version "$version"
 
-version=$1
 if [ ! -d "versions/$version" ]; then
     echo "No version found"
     exit 1
 fi
 
-$PYTHON downloader.py --libraries --server --force-version "$version"
 if [ ! -f "versions/$version/$version-client.txt" ] \
-    || [ ! -f "versions/$version/$version-client.txt" ]; then
+    || [ ! -f "versions/$version/$version-server.txt" ]; then
     echo "No mojang mappings found"
     exit 1
 fi
@@ -45,5 +57,10 @@ java -Xmx1G -jar tools/stitch-0.17.0+local-all.jar mergeJar \
     "versions/$version/$version-server-deobf.jar" \
     "versions/$version/$version-deobf.jar" \
     || exit 1
+
+if [ $# -eq 2 ] && [ "$2" == "--no-sources" ]; then
+    echo "version $version merged jar saved to versions/$version/$version-deobf.jar"
+    exit
+fi
 
 $PYTHON generate_sources.py "$version"
